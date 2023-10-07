@@ -58,11 +58,19 @@ export default function Home() {
               </Stack>
             }
           </Stack>
-          <UserList setAlert={setAlert}/>
 
-          <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
-            <Alert onClose={() => setAlert(false)} sx={{position: 'absolute', bottom: 10, right: 10}} severity="success">User added successfully</Alert>
-          </Slide>
+            {
+              account ?
+              <>
+                <UserList setAlert={setAlert}/>
+
+                <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
+                  <Alert onClose={() => setAlert(false)} sx={{position: 'absolute', bottom: 10, right: 10}} severity="success">User added successfully</Alert>
+                </Slide>
+              </>
+              : 
+              <Typography fontSize={30}>Please connect your wallet</Typography>
+            }
 
         </Container>
       </main>
