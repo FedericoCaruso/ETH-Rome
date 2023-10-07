@@ -12,6 +12,8 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.12",
+    "@railgun-community/shared-models": "^5.3.6",
+    "@railgun-community/wallet": "^5.5.8",
     "ethers": "^6.7.1",
     "next": "13.5.4",
     "react": "^18",
