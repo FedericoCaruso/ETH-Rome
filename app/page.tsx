@@ -7,12 +7,14 @@ import Avvvatars from 'avvvatars-react';
 import { truncateString } from './utils';
 import { UserList } from './components';
 import { useState } from 'react';
+import { useBroadcastPublicKey } from './hooks';
 
 export default function Home() {
 
   const { status, connect, account, chainId, ethereum } = useMetaMask();
 
   const [alert, setAlert] = useState<boolean>(false);
+
 
   return (
 

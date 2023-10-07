@@ -1,12 +1,12 @@
 import "@ethersproject/shims";
 
 import { generatePrivateKey, getPublicKey } from "@waku/message-encryption";
-import { PublicKeyContentTopic } from "./waku";
 import { keccak256, _TypedDataEncoder, recoverAddress } from "ethers/lib/utils";
 import { equals } from "uint8arrays/equals";
 import type { TypedDataSigner } from "@ethersproject/abstract-signer";
 import { bytesToHex, hexToBytes, utf8ToBytes } from "@waku/utils/bytes";
 import { PublicKeyMessage } from "./wire";
+import { PublicKeyContentTopic } from "./constants";
 
 export const SimpleHash = (message: string): string => keccak256(utf8ToBytes(message))
 

@@ -8,9 +8,7 @@ import { bytesToHex, hexToBytes } from "@waku/utils/bytes";
 import type { DecodedMessage } from "@waku/message-encryption";
 import { Message } from "./types";
 import { PrivateMessage, PublicKeyMessage } from "./wire";
-
-export const PublicKeyContentTopic = "/eth-pm/1/public-key/proto";
-const _privateMessageContentTopic = "/eth-pm/1/private-message/proto";
+import { PrivateMessageContentTopicPrefix } from "./constants";
 
 export async function initWaku(): Promise<LightNode> {
     const waku = await createLightNode({ defaultBootstrap: true });
@@ -75,5 +73,5 @@ export async function handlePrivateMessage(
 
 export const getDynamicPrivateMessageContentTopic = (addr1: string, addr2: string) => {
     const suffix = [addr1, addr2].sort((a, b) => a.localeCompare(b)).join('/');
-    return `${_privateMessageContentTopic}/${SimpleHash(suffix)}`
+    return `${PrivateMessageContentTopicPrefix}/${SimpleHash(suffix)}`
 }

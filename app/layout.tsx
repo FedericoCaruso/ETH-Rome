@@ -2,7 +2,6 @@
 
 import { MetaMaskProvider } from 'metamask-react'
 import './globals.css'
-import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react'
 import { LightNode } from '@waku/interfaces'
@@ -30,10 +29,9 @@ export default function RootLayout({
     });
   }, [waku]);
 
-
   return (
     <html lang="en">
-      <body className={inter.className} style={{backgroundColor: 'mediumpurple'}}>
+      <body className={inter.className} style={{ backgroundColor: 'mediumpurple' }}>
         <MetaMaskProvider>
           {children}
         </MetaMaskProvider>

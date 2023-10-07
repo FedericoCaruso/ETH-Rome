@@ -5,8 +5,8 @@ import { createEncoder } from "@waku/message-encryption/symmetric";
 import type { TypedDataSigner } from "@ethersproject/abstract-signer";
 import { KeyPair, PublicKeyMessageEncryptionKey, createPublicKeyMessage } from "./utils/crypto";
 import { PublicKeyMessage } from "./utils/wire";
-import { PublicKeyContentTopic } from "./utils/waku";
 import { Button } from "@mui/material";
+import { PublicKeyContentTopic } from "./utils/constants";
 
 interface Props {
     encryptionKeyPair: KeyPair | undefined;
