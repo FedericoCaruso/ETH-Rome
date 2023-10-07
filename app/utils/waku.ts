@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction } from "react";
 import type { LightNode } from "@waku/interfaces";
 import { Protocols } from "@waku/interfaces";
-import { PrivateMessage, PublicKeyMessage } from "./messaging/wire";
 import { SimpleHash, validatePublicKeyMessage } from "./crypto";
-import { Message } from "./messaging/Messages";
 import { equals } from "uint8arrays/equals";
 import { waitForRemotePeer, createLightNode } from "@waku/sdk";
 import { bytesToHex, hexToBytes } from "@waku/utils/bytes";
 import type { DecodedMessage } from "@waku/message-encryption";
+import { Message } from "./types";
+import { PrivateMessage, PublicKeyMessage } from "./wire";
 
 export const PublicKeyContentTopic = "/eth-pm/1/public-key/proto";
 const _privateMessageContentTopic = "/eth-pm/1/private-message/proto";
