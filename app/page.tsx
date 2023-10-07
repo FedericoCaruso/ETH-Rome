@@ -6,15 +6,26 @@ import { useMetaMask } from 'metamask-react';
 import Avvvatars from 'avvvatars-react';
 import { truncateString } from './utils';
 import { UserList } from './components';
-import { useState } from 'react';
-import { useBroadcastPublicKey } from './hooks';
+import { useEffect, useState } from 'react';
+import { checkKeyPairFromStorage } from './components/key_pair_handling/key_pair_storage';
 
 export default function Home() {
 
   const { status, connect, account, chainId, ethereum } = useMetaMask();
 
   const [alert, setAlert] = useState<boolean>(false);
+  const [keyExist, setKeyExist] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(0);
 
+  const isKeyPresent = async () => {
+    if (!account) return;
+    const iskeyPresent = await checkKeyPairFromStorage(account);
+    setKeyExist(iskeyPresent);
+  };
+
+  useEffect(() => {
+    isKeyPresent();
+  }, [account])
 
   return (
 
@@ -62,11 +73,19 @@ export default function Home() {
             {
               account ?
               <>
-                <UserList setAlert={setAlert}/>
+                {
+                  step === 0 ?
+                  <Button variant='contained' onClick={() => setStep(1)}>Start</Button>
+                  : 
+                  <>
+                    <UserList setAlert={setAlert}/>
 
-                <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
-                  <Alert onClose={() => setAlert(false)} sx={{position: 'absolute', bottom: 10, right: 10}} severity="success">User added successfully</Alert>
-                </Slide>
+                    <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
+                      <Alert onClose={() => setAlert(false)} sx={{position: 'absolute', bottom: 10, right: 10}} severity="success">User added successfully</Alert>
+                    </Slide>
+                  </>
+                }                
+
               </>
               : 
               <Typography fontSize={30}>Please connect your wallet</Typography>

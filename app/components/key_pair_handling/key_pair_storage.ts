@@ -42,18 +42,10 @@ export async function loadKeyPairFromStorage(
  * Check if there's a store for the connected account
  */
 export async function checkKeyPairFromStorage(
-  password: string,
   account: string
-): Promise<KeyPair | undefined> {
+): Promise<boolean> {
   const str = localStorage.getItem(getItemKey(account));
-  if (!str) return;
-  const data = JSON.parse(str);
-
-  const salt = hexToBytes(data.salt);
-  const iv = hexToBytes(data.iv);
-  const cipher = hexToBytes(data.cipher);
-
-  return await decryptKey(salt, iv, cipher, password);
+  return !!str;
 }
 
 function getItemKey(account: string): string {
