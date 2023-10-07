@@ -15,6 +15,8 @@
     "@railgun-community/shared-models": "^5.3.6",
     "@railgun-community/wallet": "^5.5.8",
     "ethers": "^6.7.1",
+    "level-js": "^6.1.0",
+    "localforage": "^1.10.0",
     "next": "13.5.4",
     "react": "^18",
     "react-dom": "^18"
