@@ -118,14 +118,16 @@ export default function Home() {
           marginTop={3}
           maxWidth={900}
           alignItems="center"
-          justifyContent='flex-end'
+          justifyContent='center'
           >
           {status === "notConnected" && (
             
-            
-            <Button onClick={connect} variant="contained" color="secondary">
-              Connect
-            </Button>
+            <Stack  direction="row" spacing={2}>
+               <Typography fontSize={30}>Please connect your wallet</Typography>
+              <Button onClick={connect} variant="contained" color="secondary">
+                Connect
+              </Button>
+            </Stack>
           )}
 
           {status === "connected" && (
@@ -185,8 +187,7 @@ export default function Home() {
                     alt="The house from the offer."
                     src="/images/metamask.png"
                     />
-                    <br />
-                    <Typography fontSize={30}>Please connect your wallet</Typography>
+                   
                   </Stack>
                 )}
               </>
