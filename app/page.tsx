@@ -5,6 +5,7 @@ import {
   Alert,
   Button,
   Container,
+  Skeleton,
   Slide,
   Stack,
   Typography,
@@ -24,9 +25,14 @@ import { KeyPair } from "./utils/crypto";
 export default function Home() {
   const { status, connect, account, ethereum } = useMetaMask();
   const [alert, setAlert] = useState<boolean>(false);
-
-  const [step, setStep] = useState<number>(0);
   const [encryptionKeyPair, setEncryptionKeyPair] = useState<KeyPair>();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const [step, setStep] = useState<number>(
+    (account && !encryptionKeyPair) ? 1 :
+    (account && encryptionKeyPair) ? 2 :
+    0
+  );
 
   const [provider, setProvider] = useState<Web3Provider>();
   useEffect(() => {
@@ -43,6 +49,19 @@ export default function Home() {
     account ?? undefined,
     signer
   );
+
+  useEffect(() => {
+    setLoading(true);
+    const isStep1 = account && !encryptionKeyPair;
+    const isStep2 = account && encryptionKeyPair;
+    isStep1 ? setStep(1) : isStep2 ? setStep(2) : setStep(0);
+    setLoading(false);
+  }, [account, encryptionKeyPair]);
+
+  useEffect(() => {
+    status === "connecting" && setLoading(true);
+    status === "connected" && setLoading(false);
+  }, [status]);
 
   return (
     <main>
@@ -93,7 +112,12 @@ export default function Home() {
           )}
         </Stack>
 
-        {account ? (
+        {
+          loading ?
+          <Skeleton variant="rectangular" width={210} height={118} />
+          : 
+            <>
+            {account ? (
           <>
             {step === 0 ? (
               <Button variant="contained" onClick={() => setStep(1)}>
@@ -120,6 +144,10 @@ export default function Home() {
         ) : (
           <Typography fontSize={30}>Please connect your wallet</Typography>
         )}
+            </>
+        }
+
+        
       </Container>
     </main>
   );
