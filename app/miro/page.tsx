@@ -17,7 +17,7 @@ import { createArtifactStore } from '../utils/create-artifact-store';
 
 
 export default function Miro() {
-  // console.log("working");
+   console.log("working");
 
   // const [railgunWalletInfo, setWalletInfo] = useState(); 
 
@@ -54,7 +54,6 @@ export default function Miro() {
 
   async function generateWallet() {
     alert("Generate Wallet started");
-
     
     const encryptionKey: string = '0101010101010101010101010101010101010101010101010101010101010101';
     const genMnemonic = Mnemonic.fromEntropy(randomBytes(16)).phrase.trim();
@@ -77,8 +76,9 @@ export default function Miro() {
   
     const id = railgunWalletInfo?.id; // Store this value.
     
-    alert(id);
-
+    console.log("railgun address: " + railgunWalletInfo?.railgunAddress);
+    console.log("railgun id: " + railgunWalletInfo?.id);
+    console.log("Mnemonic: " + mnemonic);
   }
 
   function startRailgun() {
