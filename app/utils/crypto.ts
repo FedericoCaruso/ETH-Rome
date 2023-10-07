@@ -52,7 +52,6 @@ export async function createPublicKeyMessage(
 }
 
 function buildMsgParams(encryptionPublicKey: Uint8Array, fromAddress: string) {
-    // const hex = bytesToHex(encryptionPublicKey);
     const bytes = new Uint8Array(encryptionPublicKey.buffer, encryptionPublicKey.byteOffset, encryptionPublicKey.byteLength)
     return {
         domain: {
