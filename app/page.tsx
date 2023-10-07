@@ -136,7 +136,7 @@ export default function Home() {
                       <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
                     ) : (
                       <>
-                        <ChatContainer />
+                        {encryptionKeyPair && <ChatContainer encryptionKeyPair={encryptionKeyPair} /> }
                     </>
                   )}
                 </>
