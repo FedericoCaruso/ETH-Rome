@@ -24,8 +24,8 @@ export const ChatContainer = ({ encryptionKeyPair }: IChatContainer) => {
 
             <Grid item xs={12} md={8}>
                 <Chat
-                // recipient={recipient}
-                // encryptionKeyPair={encryptionKeyPair}
+                    recipient={recipient}
+                    encryptionKeyPair={encryptionKeyPair}
                 />
             </Grid>
 
