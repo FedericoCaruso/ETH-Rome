@@ -1,20 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import type { LightNode } from "@waku/interfaces";
 import { createEncoder } from "@waku/message-encryption/symmetric";
 import type { TypedDataSigner } from "@ethersproject/abstract-signer";
 import { PublicKeyMessage } from "../utils/wire";
 import { KeyPair, PublicKeyMessageEncryptionKey, createPublicKeyMessage } from "../utils/crypto";
 import { PublicKeyContentTopic } from "../utils/constants";
+import { WakuContext } from "./useWakuContext";
 
 export function useBroadcastPublicKey(
     encryptionKeyPair: KeyPair | undefined,
-    waku: LightNode | undefined,
     address: string | undefined,
     signer: TypedDataSigner | undefined
 ) {
     const [publicKeyMsg, setPublicKeyMsg] = useState<PublicKeyMessage | null>(
         null
     );
+
+    const waku = useContext(WakuContext);
 
     useEffect(() => {
         const broadcastPublicKey = async () => {

@@ -8,11 +8,13 @@ import { truncateString } from './utils';
 import { UserList } from './components';
 import { useEffect, useState } from 'react';
 import { checkKeyPairFromStorage } from './components/key_pair_handling/key_pair_storage';
+import { Web3Provider } from '@ethersproject/providers';
+import { ethers } from 'ethers';
+import { useBroadcastPublicKey } from './hooks';
 
 export default function Home() {
 
-  const { status, connect, account, chainId, ethereum } = useMetaMask();
-
+  const { status, connect, account, ethereum } = useMetaMask();
   const [alert, setAlert] = useState<boolean>(false);
   const [keyExist, setKeyExist] = useState<boolean>(false);
   const [step, setStep] = useState<number>(0);
@@ -26,40 +28,56 @@ export default function Home() {
   useEffect(() => {
     isKeyPresent();
   }, [account])
+  
+  const [provider, setProvider] = useState<Web3Provider>()
+  useEffect(() => {
+    if (!window) return;
+
+    const pr = new ethers.providers.Web3Provider((window as any).ethereum);
+    setProvider(pr);
+  }, [ethereum])
+
+  const signer = provider?.getSigner();
+
+  const { isBroadcasting, publicKeyMsg } = useBroadcastPublicKey(
+    undefined,
+    account ?? undefined,
+    signer
+  );
 
   return (
 
-      <main>
-        <Container 
-          maxWidth="md" 
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 4
-          }}
-        >
-          <Stack direction='row' width={'100%'} marginTop={3} maxWidth={900} alignItems='center' justifyContent='space-between'>
-            <Fade in={true} timeout={2000}>
-              <Typography
-                sx={{
-                  backgroundImage: 'linear-gradient(120deg, #a6c0fe 0%, #f68084)',
-                  WebkitTextFillColor: 'transparent',
-                  WebkitBackgroundClip: 'text' 
-                }}
-                variant='h6'
-                component={'h1'}
-                fontSize={22}
-                fontWeight={700}
-              >
-                Dissident
-              </Typography>
-            </Fade>
-            {
-              status === "notConnected" &&
-              <Button onClick={connect} variant='contained' color='secondary'>
-                Connect
-              </Button>
-            }
+    <main>
+      <Container
+        maxWidth="md"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 4
+        }}
+      >
+        <Stack direction='row' width={'100%'} marginTop={3} maxWidth={900} alignItems='center' justifyContent='space-between'>
+          <Fade in={true} timeout={2000}>
+            <Typography
+              sx={{
+                backgroundImage: 'linear-gradient(120deg, #a6c0fe 0%, #f68084)',
+                WebkitTextFillColor: 'transparent',
+                WebkitBackgroundClip: 'text'
+              }}
+              variant='h6'
+              component={'h1'}
+              fontSize={22}
+              fontWeight={700}
+            >
+              Dissident
+            </Typography>
+          </Fade>
+          {
+            status === "notConnected" &&
+            <Button onClick={connect} variant='contained' color='secondary'>
+              Connect
+            </Button>
+          }
 
             {
               status === "connected" &&
