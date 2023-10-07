@@ -84,7 +84,7 @@ export default function Railgun() {
 
   return (
     <div>
-      <h1>index</h1>
+      <h1>Railgun</h1>
 
       <button onClick={generateWallet}>
         generate Wallet
