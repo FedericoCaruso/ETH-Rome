@@ -38,7 +38,6 @@ export default function SendMessage({ waku, recipients, onChangeRecipient, addre
 
   const keyDownHandler = async (event: KeyboardEvent<HTMLInputElement>) => {
 
-    // debugger
     if (
       event.key === "Enter" &&
       !event.altKey &&

@@ -66,46 +66,44 @@ export default function Home() {
           gap: 4,
         }}
       >
-        
-
-          <AppBar position="relative" style={{ background: '#000000' }} >
-            <Toolbar>
-              <Grid container spacing={2}>
-                <Grid item xs={2}>
-                  <Avatar
-                    alt="Logo"
-                    src="/images/logo.jpg"
-                    sx={{ width: 100, height: 100 }}
-                  />
-                </Grid>
-                <Grid item xs={10}>
-                  <Box
-                    component="img"
-                    sx={{
-                      width: '100%',
-                    }}
-                    alt="The house from the offer."
-                    src="/images/dissident.png"
-                  />
-
-                </Grid>
+        <AppBar position="relative" style={{ background: '#000000' }} >
+          <Toolbar>
+            <Grid container spacing={2}>
+              <Grid item xs={2}>
+                <Avatar
+                  alt="Logo"
+                  src="/images/logo.jpg"
+                  sx={{ width: 100, height: 100 }}
+                />
               </Grid>
+              <Grid item xs={10}>
+                <Box
+                  component="img"
+                  sx={{
+                    width: '100%',
+                  }}
+                  alt="The house from the offer."
+                  src="/images/dissident.png"
+                />
+
+              </Grid>
+            </Grid>
 
 
-            </Toolbar>
-          </AppBar>
+          </Toolbar>
+        </AppBar>
 
-          <Stack
-            direction="row"
-            width={"100%"}
-            marginTop={3}
-            maxWidth={900}
-            alignItems="center"
-            justifyContent='center'
-          >
+        <Stack
+          direction="row"
+          width={"100%"}
+          marginTop={3}
+          maxWidth={900}
+          alignItems="center"
+          justifyContent='center'
+        >
           {status === "notConnected" && (
-            <Stack  direction="row" spacing={2}>
-               <Typography fontSize={30}>Please connect your wallet</Typography>
+            <Stack direction="row" spacing={2}>
+              <Typography fontSize={30}>Please connect your wallet</Typography>
               <Button onClick={connect} variant="contained" color="secondary">
                 Connect
               </Button>
@@ -113,7 +111,7 @@ export default function Home() {
           )}
 
           {status === "connected" && (
-            <Stack direction="row"  alignItems="center" gap={1}>
+            <Stack direction="row" alignItems="center" gap={1}>
               <Avvvatars style="shape" value={account} />
               <Typography fontSize={24}>
                 {truncateString(account, 4, 4)}
@@ -121,59 +119,59 @@ export default function Home() {
             </Stack>
           )}
         </Stack>
-      
+
 
         {
-            status === 'initializing' || status === 'connecting' ?
-              <Skeleton variant="rectangular" width={'100%'} height={118} />
-              :
-              <>
-                {account ? (
-                  <>
-                    {step === 0 ? (
-                      <Button variant="contained" onClick={() => setStep(1)}>
-                        Start
-                      </Button>
-                    ) : step === 1 ? (
-                      <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
-                    ) : (
-                      <>
-                        <UserList setAlert={setAlert} />
+          status === 'initializing' || status === 'connecting' ?
+            <Skeleton variant="rectangular" width={'100%'} height={118} />
+            :
+            <>
+              {account ? (
+                <>
+                  {step === 0 ? (
+                    <Button variant="contained" onClick={() => setStep(1)}>
+                      Start
+                    </Button>
+                  ) : step === 1 ? (
+                    <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
+                  ) : (
+                    <>
+                      <UserList setAlert={setAlert} />
 
-                        <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
-                          <Alert
-                            onClose={() => setAlert(false)}
-                            sx={{ position: "absolute", bottom: 10, right: 10 }}
-                            severity="success"
-                          >
-                            User added successfully
-                          </Alert>
-                        </Slide>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <Stack
+                      <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
+                        <Alert
+                          onClose={() => setAlert(false)}
+                          sx={{ position: "absolute", bottom: 10, right: 10 }}
+                          severity="success"
+                        >
+                          User added successfully
+                        </Alert>
+                      </Slide>
+                    </>
+                  )}
+                </>
+              ) : (
+                <Stack
                   direction="row"
                   width={"100%"}
                   marginTop={3}
                   maxWidth={900}
                   alignItems="center"
                   justifyContent='center'
-                  >
-                    <Box
+                >
+                  <Box
                     component="img"
                     sx={{
                       height: 400,
                     }}
                     alt="The house from the offer."
                     src="/images/metamask.png"
-                    />
-                   
-                  </Stack>
-                )}
-              </>
-          }
+                  />
+
+                </Stack>
+              )}
+            </>
+        }
 
 
       </Container>
