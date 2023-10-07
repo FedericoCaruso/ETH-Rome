@@ -35,10 +35,11 @@ const PasswordForm = ({ setEncryptionKeyPair }: IPasswordForm) => {
     return kp;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
     if (!account) throw new Error("Please connect to Metamask");
     keyExist
-      ? loadKeyPairFromStorage(password, account)
+      ? setEncryptionKeyPair(await loadKeyPairFromStorage(password, account))
       : saveKeyPairToStorage(
           await generateEncryptionKeyPairHandler(),
           password,

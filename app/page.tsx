@@ -15,7 +15,6 @@ import Avvvatars from "avvvatars-react";
 import { truncateString } from "./utils";
 import { UserList } from "./components";
 import { useEffect, useState } from "react";
-import { checkKeyPairFromStorage } from "./components/key_pair_handling/key_pair_storage";
 import { Web3Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
 import { useBroadcastPublicKey } from "./hooks";
@@ -26,13 +25,8 @@ export default function Home() {
   const { status, connect, account, ethereum } = useMetaMask();
   const [alert, setAlert] = useState<boolean>(false);
   const [encryptionKeyPair, setEncryptionKeyPair] = useState<KeyPair>();
-  const [loading, setLoading] = useState<boolean>(true);
 
-  const [step, setStep] = useState<number>(
-    (account && !encryptionKeyPair) ? 1 :
-    (account && encryptionKeyPair) ? 2 :
-    0
-  );
+  const [step, setStep] = useState<number>(0);
 
   const [provider, setProvider] = useState<Web3Provider>();
   useEffect(() => {
@@ -45,23 +39,17 @@ export default function Home() {
   const signer = provider?.getSigner();
 
   const { isBroadcasting, publicKeyMsg } = useBroadcastPublicKey(
-    undefined,
+    encryptionKeyPair,
     account ?? undefined,
     signer
   );
 
   useEffect(() => {
-    setLoading(true);
+    if (status === 'initializing' || status === 'connecting') return;
     const isStep1 = account && !encryptionKeyPair;
     const isStep2 = account && encryptionKeyPair;
     isStep1 ? setStep(1) : isStep2 ? setStep(2) : setStep(0);
-    setLoading(false);
   }, [account, encryptionKeyPair]);
-
-  useEffect(() => {
-    status === "connecting" && setLoading(true);
-    status === "connected" && setLoading(false);
-  }, [status]);
 
   return (
     <main>
@@ -113,8 +101,8 @@ export default function Home() {
         </Stack>
 
         {
-          loading ?
-          <Skeleton variant="rectangular" width={210} height={118} />
+          status === 'initializing' || status === 'connecting' ?
+          <Skeleton variant="rectangular" width={'100%'} height={118} />
           : 
             <>
             {account ? (
