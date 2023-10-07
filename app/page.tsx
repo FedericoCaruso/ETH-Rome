@@ -25,10 +25,10 @@ import { ethers } from "ethers";
 import { useBroadcastPublicKey } from "./hooks";
 import PasswordForm from "./components/PasswordForm";
 import { KeyPair } from "./utils/crypto";
+import { ChatContainer } from "./components/ChatContainer";
 
 export default function Home() {
   const { status, connect, account, ethereum } = useMetaMask();
-  const [alert, setAlert] = useState<boolean>(false);
   const [encryptionKeyPair, setEncryptionKeyPair] = useState<KeyPair>();
 
   const [step, setStep] = useState<number>(0);
@@ -136,20 +136,7 @@ export default function Home() {
                       <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
                     ) : (
                       <>
-
-                        <Chat />
-
-                        <UserList setAlert={setAlert} />
-
-                      <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
-                        <Alert
-                          onClose={() => setAlert(false)}
-                          sx={{ position: "absolute", bottom: 10, right: 10 }}
-                          severity="success"
-                        >
-                          User added successfully
-                        </Alert>
-                      </Slide>
+                        <ChatContainer />
                     </>
                   )}
                 </>
