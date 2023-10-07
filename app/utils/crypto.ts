@@ -52,6 +52,7 @@ export async function createPublicKeyMessage(
 }
 
 function buildMsgParams(encryptionPublicKey: Uint8Array, fromAddress: string) {
+    const bytes = new Uint8Array(encryptionPublicKey.buffer, encryptionPublicKey.byteOffset, encryptionPublicKey.byteLength)
     return {
         domain: {
             name: "Ethereum Private Message over Waku",
@@ -60,7 +61,7 @@ function buildMsgParams(encryptionPublicKey: Uint8Array, fromAddress: string) {
         value: {
             message:
                 "By signing this message you certify that messages addressed to `ownerAddress` must be encrypted with `encryptionPublicKey`",
-            encryptionPublicKey: bytesToHex(encryptionPublicKey),
+            encryptionPublicKey: bytesToHex(bytes),
             ownerAddress: fromAddress,
         },
         // Refers to the keys of the *types* object below.

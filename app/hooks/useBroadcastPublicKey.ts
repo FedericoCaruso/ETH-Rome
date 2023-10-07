@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-import type { LightNode } from "@waku/interfaces";
 import { createEncoder } from "@waku/message-encryption/symmetric";
 import type { TypedDataSigner } from "@ethersproject/abstract-signer";
 import { PublicKeyMessage } from "../utils/wire";
@@ -22,16 +21,20 @@ export function useBroadcastPublicKey(
         const broadcastPublicKey = async () => {
             if (!encryptionKeyPair || !address || !waku || !signer) return;
 
-            if (!publicKeyMsg) {
-                const pkm = await createPublicKeyMessage(
-                    address,
-                    encryptionKeyPair.publicKey,
-                    signer
-                );
-                setPublicKeyMsg(pkm);
-            }
+            const _publicKeyMessage = await (async () => {
+                if (!publicKeyMsg) {
+                    const pkm = await createPublicKeyMessage(
+                        address,
+                        encryptionKeyPair.publicKey,
+                        signer
+                    );
 
-            const payload = publicKeyMsg!.encode();
+                    setPublicKeyMsg(pkm);
+                    return pkm;
+                }
+                return publicKeyMsg;
+            })();
+            const payload = _publicKeyMessage.encode();
 
             const publicKeyMessageEncoder = createEncoder({
                 contentTopic: PublicKeyContentTopic,
