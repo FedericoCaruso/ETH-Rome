@@ -18,7 +18,7 @@ import {
 import { useMetaMask } from "metamask-react";
 import Avvvatars from "avvvatars-react";
 import { truncateString } from "./utils";
-import { UserList } from "./components";
+import { Chat, UserList } from "./components";
 import { useEffect, useState } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
@@ -138,6 +138,9 @@ export default function Home() {
                       <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
                     ) : (
                       <>
+
+                        <Chat />
+
                         <UserList setAlert={setAlert} />
 
                         <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
