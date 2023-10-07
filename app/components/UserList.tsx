@@ -20,10 +20,11 @@ import { WakuContext } from "../hooks/useWakuContext";
 import { handlePublicKeyMessage } from "../utils/waku";
 import { PublicKeyContentTopic, SevenDaysAgo } from "../utils/constants";
 import { PublicKeyMessageEncryptionKey } from "../utils/crypto";
+import { Recipient } from "../utils/types";
 
 export interface IUserList {
   setAlert: Dispatch<SetStateAction<boolean>>;
-  setRecipient: React.Dispatch<React.SetStateAction<string>>;
+  setRecipient: React.Dispatch<React.SetStateAction<Recipient | undefined>>;
 }
 
 export const UserList = ({ setAlert, setRecipient }: IUserList) => {
@@ -121,7 +122,10 @@ export const UserList = ({ setAlert, setRecipient }: IUserList) => {
               onClick={() => {
                 // Handle the click event here
                 console.log("Selected recipient: " + user);
-                setRecipient(user);
+                setRecipient({
+                  address: user,
+                  pubKey: publicKeys.get(user)!
+                });
               }}
             >
               <ListItemAvatar>

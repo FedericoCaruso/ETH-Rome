@@ -1,6 +1,6 @@
 import Messages, { Message } from "./Messages";
 import type { LightNode } from "@waku/interfaces";
-import SendMessage from "./SendMessage";
+import SendMessage from "../SendMessage";
 import { useState } from "react";
 import { KeyPair } from "@/app/utils/crypto";
 

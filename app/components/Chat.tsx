@@ -1,5 +1,4 @@
 import { Box, Card, CardActions, CardContent, IconButton, InputAdornment, Slide, TextField, Typography } from '@mui/material'
-import SendIcon from '@mui/icons-material/Send';
 import { useContext, useEffect, useState } from 'react';
 import { useMetaMask } from 'metamask-react';
 import Avvvatars from 'avvvatars-react';
@@ -12,6 +11,8 @@ import { createDecoder } from "@waku/message-encryption/ecies";
 import { useStoreMessages } from '@waku/react';
 import { WakuContext } from '../hooks/useWakuContext';
 import { SevenDaysAgo } from '../utils/constants';
+import SendMessage from './SendMessage';
+import { Recipient } from '../utils/types';
 
 export interface Message {
     text: string;
@@ -19,7 +20,7 @@ export interface Message {
 }
 
 export interface Props {
-    recipient: string;
+    recipient: Recipient;
     encryptionKeyPair: KeyPair;
 }
 
@@ -31,7 +32,7 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
 
     const [privateMessageDecoder, setPrivateMessageDecoder] = useState<IDecoder<DecodedMessage>>();
     const [chatMessages, setChatMessages] = useState<Message[]>([]);
-    const dynamicContentTopic = getDynamicPrivateMessageContentTopic(account ?? '', recipient);
+    const dynamicContentTopic = getDynamicPrivateMessageContentTopic(account ?? '', recipient.address);
 
     const observerPrivateMessage = handlePrivateMessage.bind(
         {},
@@ -64,8 +65,6 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
         messages.map(privMsg => observerPrivateMessage(privMsg as DecodedMessage))
     }, [messages])
 
-    const [contractAddress, setContractAddress] = useState<string>('');
-
     return (
         <Card sx={{ minHeight: 325, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -84,29 +83,8 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
                 }
             </CardContent>
             <CardActions>
-                <TextField
-                    value={contractAddress}
-                    onChange={(event) => setContractAddress(event.target.value)}
-                    fullWidth
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={() => {
-                                        //setSecondUserMessages(prevState => [...prevState, contractAddress]);
-                                        setContractAddress('');
-                                    }}
-                                    edge="end"
-                                >
-                                    <SendIcon />
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
-                    variant='outlined'
-                    placeholder='Insert a contract address'
-                />
+                <SendMessage
+                    recipient={recipient} />
             </CardActions>
         </Card>
     )

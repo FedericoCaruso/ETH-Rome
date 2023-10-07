@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Chat, UserList } from '.'
 import { Slide, Alert, Grid } from '@mui/material';
 import { KeyPair } from '../utils/crypto';
+import { Recipient } from '../utils/types';
 
 export interface IChatContainer {
     encryptionKeyPair: KeyPair;
@@ -10,7 +11,7 @@ export interface IChatContainer {
 export const ChatContainer = ({ encryptionKeyPair }: IChatContainer) => {
 
     const [alert, setAlert] = useState<boolean>(false);
-    const [recipient, setRecipient] = useState<string>('');
+    const [recipient, setRecipient] = useState<Recipient>();
 
     return (
         <Grid container spacing={2}>
@@ -23,10 +24,13 @@ export const ChatContainer = ({ encryptionKeyPair }: IChatContainer) => {
             </Grid>
 
             <Grid item xs={12} md={8}>
-                <Chat
-                    recipient={recipient}
-                    encryptionKeyPair={encryptionKeyPair}
-                />
+                {
+                    encryptionKeyPair && recipient &&
+                    <Chat
+                        recipient={recipient}
+                        encryptionKeyPair={encryptionKeyPair}
+                    />
+                }
             </Grid>
 
             <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
