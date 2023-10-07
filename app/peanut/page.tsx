@@ -14,30 +14,30 @@ export default function Peanut() {
   async function startPeanut() {
 
     const mnemonic = "announce room limb pattern dry unit scale effort smooth jazz weasel alcohol" // Replace this with a dev wallet seed phrase
-    let walletMnemonic = ethers.Wallet.fromPhrase(mnemonic)
+    let walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic)
     const address = await walletMnemonic.getAddress();
     console.log("Test address: " + address);
 
     const wallet = new ethers.Wallet(
       walletMnemonic.privateKey,
-      new ethers.JsonRpcProvider(RPC_URL));
+      new ethers.providers.JsonRpcProvider(RPC_URL));
 
     // create link
     const createLinkResponse = await peanut.createLink({
-      structSigner:{
+      structSigner: {
         signer: wallet
       },
-      linkDetails:{
+      linkDetails: {
         chainId: CHAINID,
         tokenAmount: 0.01,
         tokenType: 0,  // 0 for ether, 1 for erc20, 2 for erc721, 3 for erc1155
       }
     });
-  
-    console.log("New link: " + createLinkResponse.createdLink.link[0]);  
+
+    console.log("New link: " + createLinkResponse.createdLink.link[0]);
 
   }
-  
+
   return (
     <div>
       <h1>Peanut</h1>
@@ -46,6 +46,5 @@ export default function Peanut() {
         generate Wallet
       </button>
     </div>
-    
   )
 }
