@@ -17,13 +17,13 @@ import { createArtifactStore } from '../utils/create-artifact-store';
 
 
 export default function Miro() {
-  console.log("working");
+  // console.log("working");
 
-  const [railgunWalletInfo, setWalletInfo] = useState(); 
+  // const [railgunWalletInfo, setWalletInfo] = useState(); 
 
-  const encryptionKey: string = '0101010101010101010101010101010101010101010101010101010101010101';
-  const genMnemonic = Mnemonic.fromEntropy(randomBytes(16)).phrase.trim();
-  const mnemonic = genMnemonic // Either provided by user or generated with ethers.js
+  // const encryptionKey: string = '0101010101010101010101010101010101010101010101010101010101010101';
+  // const genMnemonic = Mnemonic.fromEntropy(randomBytes(16)).phrase.trim();
+  // const mnemonic = genMnemonic // Either provided by user or generated with ethers.js
 
   /*
   const creationBlockNumberMap: MapType<number> = {
@@ -50,8 +50,34 @@ export default function Miro() {
   console.log(id);
 
   */
+  const [railgunWalletInfo, setWalletInfo] = useState(); 
 
-  function generateWallet(){
+  async function generateWallet() {
+    alert("Generate Wallet started");
+
+    
+    const encryptionKey: string = '0101010101010101010101010101010101010101010101010101010101010101';
+    const genMnemonic = Mnemonic.fromEntropy(randomBytes(16)).phrase.trim();
+    const mnemonic = genMnemonic // Either provided by user or generated with ethers.js
+
+    const creationBlockNumberMap: MapType<number> = {
+      [NetworkName.Ethereum]: 15725700,
+      [NetworkName.Polygon]: 3421400,
+    }
+  
+  
+      const railgunWalletInfo =  await createRailgunWallet(
+        encryptionKey, 
+        mnemonic, 
+        creationBlockNumberMap,
+      );
+      setWalletInfo(railgunWalletInfo);
+    
+     
+  
+    const id = railgunWalletInfo?.id; // Store this value.
+    
+    alert(id);
 
   }
 
