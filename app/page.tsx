@@ -118,18 +118,20 @@ export default function Home() {
           marginTop={3}
           maxWidth={900}
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent='flex-end'
           >
           {status === "notConnected" && (
+            
+            
             <Button onClick={connect} variant="contained" color="secondary">
               Connect
             </Button>
           )}
 
           {status === "connected" && (
-            <Stack direction="row" alignItems="center" gap={1}>
+            <Stack direction="row"  alignItems="center" gap={1}>
               <Avvvatars style="shape" value={account} />
-              <Typography fontSize={12}>
+              <Typography fontSize={24}>
                 {truncateString(account, 4, 4)}
               </Typography>
             </Stack>
@@ -167,7 +169,25 @@ export default function Home() {
                     )}
                   </>
                 ) : (
-                  <Typography fontSize={30}>Please connect your wallet</Typography>
+                  <Stack
+                  direction="row"
+                  width={"100%"}
+                  marginTop={3}
+                  maxWidth={900}
+                  alignItems="center"
+                  justifyContent='center'
+                  >
+                    <Box
+                    component="img"
+                    sx={{
+                      height: 400,
+                    }}
+                    alt="The house from the offer."
+                    src="/images/metamask.png"
+                    />
+                    <br />
+                    <Typography fontSize={30}>Please connect your wallet</Typography>
+                  </Stack>
                 )}
               </>
           }
