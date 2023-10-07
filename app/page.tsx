@@ -1,29 +1,31 @@
 'use client'
 
 import Fade from '@mui/material/Fade';
-import { Button, Container, Stack, Typography } from '@mui/material';
-import CustomStepper from './components/CustomStepper';
+import { Alert, Button, Container, Slide, Stack, Typography } from '@mui/material';
 import { useMetaMask } from 'metamask-react';
 import Avvvatars from 'avvvatars-react';
 import { truncateString } from './utils';
+import { UserList } from './components';
+import { useState } from 'react';
 
 export default function Home() {
 
   const { status, connect, account, chainId, ethereum } = useMetaMask();
 
+  const [alert, setAlert] = useState<boolean>(false);
+
   return (
 
-      <main style={{height: '100dvh', width: '100dvw', backgroundColor: 'mediumpurple'}}>
+      <main>
         <Container 
           maxWidth="md" 
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            height: '100%'
+            gap: 4
           }}
         >
-          <Stack direction='row' width={'100%'} marginTop={3} maxWidth={900} alignItems='center' justifyContent='space-between' position='fixed' top={0} zIndex={9999}>
+          <Stack direction='row' width={'100%'} marginTop={3} maxWidth={900} alignItems='center' justifyContent='space-between'>
             <Fade in={true} timeout={2000}>
               <Typography
                 sx={{
@@ -54,7 +56,12 @@ export default function Home() {
               </Stack>
             }
           </Stack>
-          <CustomStepper/>
+          <UserList setAlert={setAlert}/>
+
+          <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
+            <Alert onClose={() => setAlert(false)} sx={{position: 'absolute', bottom: 10, right: 10}} severity="success">User added successfully</Alert>
+          </Slide>
+
         </Container>
       </main>
   )
