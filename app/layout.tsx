@@ -6,6 +6,7 @@ import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react'
 import { LightNode } from '@waku/interfaces'
 import { initWaku } from './utils/waku'
+import { WakuProvider } from './hooks/useWakuContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,9 +33,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} style={{ backgroundColor: 'mediumpurple' }}>
-        <MetaMaskProvider>
-          {children}
-        </MetaMaskProvider>
+        <WakuProvider>
+          <MetaMaskProvider>
+            {children}
+          </MetaMaskProvider>
+        </WakuProvider>
       </body>
     </html>
   )
