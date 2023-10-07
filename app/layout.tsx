@@ -32,12 +32,14 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className} style={{ backgroundColor: 'mediumpurple' }}>
+
+      <body className={inter.className}>
         <WakuProvider>
           <MetaMaskProvider>
             {children}
           </MetaMaskProvider>
         </WakuProvider>
+
       </body>
     </html>
   )

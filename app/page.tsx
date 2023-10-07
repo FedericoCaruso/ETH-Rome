@@ -3,11 +3,16 @@
 import Fade from "@mui/material/Fade";
 import {
   Alert,
+  AppBar,
+  Avatar,
+  Box,
   Button,
   Container,
+  Grid,
   Skeleton,
   Slide,
   Stack,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { useMetaMask } from "metamask-react";
@@ -22,6 +27,11 @@ import { useBroadcastPublicKey } from "./hooks";
 import PasswordForm from "./components/PasswordForm";
 import { KeyPair } from "./utils/crypto";
 
+
+
+
+import Image from 'next/image'
+
 export default function Home() {
   const { status, connect, account, ethereum } = useMetaMask();
   const [alert, setAlert] = useState<boolean>(false);
@@ -30,8 +40,8 @@ export default function Home() {
 
   const [step, setStep] = useState<number>(
     (account && !encryptionKeyPair) ? 1 :
-    (account && encryptionKeyPair) ? 2 :
-    0
+      (account && encryptionKeyPair) ? 2 :
+        0
   );
 
   const [provider, setProvider] = useState<Web3Provider>();
@@ -73,29 +83,43 @@ export default function Home() {
           gap: 4,
         }}
       >
-        <Stack
+        
+
+          <AppBar position="relative" style={{ background: '#000000' }} >
+            <Toolbar>
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  <Avatar
+                    alt="Logo"
+                    src="/images/logo.jpg"
+                    sx={{ width: 100, height: 100 }}
+                  />
+                </Grid>
+                <Grid item xs={10}>
+                  <Box
+                    component="img"
+                    sx={{
+                      width: '100%',
+                    }}
+                    alt="The house from the offer."
+                    src="/images/dissident.png"
+                  />
+
+                </Grid>
+              </Grid>
+
+
+            </Toolbar>
+          </AppBar>
+
+          <Stack
           direction="row"
           width={"100%"}
           marginTop={3}
           maxWidth={900}
           alignItems="center"
           justifyContent="space-between"
-        >
-          <Fade in={true} timeout={2000}>
-            <Typography
-              sx={{
-                backgroundImage: "linear-gradient(120deg, #a6c0fe 0%, #f68084)",
-                WebkitTextFillColor: "transparent",
-                WebkitBackgroundClip: "text",
-              }}
-              variant="h6"
-              component={"h1"}
-              fontSize={22}
-              fontWeight={700}
-            >
-              Dissident
-            </Typography>
-          </Fade>
+          >
           {status === "notConnected" && (
             <Button onClick={connect} variant="contained" color="secondary">
               Connect
@@ -111,43 +135,44 @@ export default function Home() {
             </Stack>
           )}
         </Stack>
+      
 
         {
-          loading ?
-          <Skeleton variant="rectangular" width={210} height={118} />
-          : 
-            <>
-            {account ? (
-          <>
-            {step === 0 ? (
-              <Button variant="contained" onClick={() => setStep(1)}>
-                Start
-              </Button>
-            ) : step === 1 ? (
-              <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
-            ) : (
+            loading ?
+              <Skeleton variant="rectangular" width={210} height={118} />
+              :
               <>
-                <UserList setAlert={setAlert} />
+                {account ? (
+                  <>
+                    {step === 0 ? (
+                      <Button variant="contained" onClick={() => setStep(1)}>
+                        Start
+                      </Button>
+                    ) : step === 1 ? (
+                      <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
+                    ) : (
+                      <>
+                        <UserList setAlert={setAlert} />
 
-                <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
-                  <Alert
-                    onClose={() => setAlert(false)}
-                    sx={{ position: "absolute", bottom: 10, right: 10 }}
-                    severity="success"
-                  >
-                    User added successfully
-                  </Alert>
-                </Slide>
+                        <Slide direction="up" in={alert} mountOnEnter unmountOnExit>
+                          <Alert
+                            onClose={() => setAlert(false)}
+                            sx={{ position: "absolute", bottom: 10, right: 10 }}
+                            severity="success"
+                          >
+                            User added successfully
+                          </Alert>
+                        </Slide>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <Typography fontSize={30}>Please connect your wallet</Typography>
+                )}
               </>
-            )}
-          </>
-        ) : (
-          <Typography fontSize={30}>Please connect your wallet</Typography>
-        )}
-            </>
-        }
+          }
 
-        
+
       </Container>
     </main>
   );
