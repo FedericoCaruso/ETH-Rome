@@ -1,48 +1,77 @@
 import {
   Stack,
-  TextField,
   Typography,
-  InputAdornment,
-  IconButton,
-  Paper,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  ListItemSecondaryAction,
-  Button,
   Divider,
   ListSubheader,
 } from "@mui/material";
 import Avvvatars from "avvvatars-react";
-import React, { Dispatch, SetStateAction } from "react";
-import SendIcon from "@mui/icons-material/Send";
+import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { truncateString } from "../utils";
+import { Decoder, PageDirection } from "@waku/sdk";
+import { DecodedMessage } from "@waku/message-encryption/ecies";
+import { createDecoder as createSymmetricDecoder } from "@waku/message-encryption/symmetric";
+import { useMetaMask } from 'metamask-react';
+import { useStoreMessages } from '@waku/react';
+import { WakuContext } from "../hooks/useWakuContext";
+import { handlePublicKeyMessage } from "../utils/waku";
+import { PublicKeyContentTopic, SevenDaysAgo } from "../utils/constants";
+import { PublicKeyMessageEncryptionKey } from "../utils/crypto";
 
 export interface IUserList {
   setAlert: Dispatch<SetStateAction<boolean>>;
+  setRecipient: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const UserList = ({ setAlert }: IUserList) => {
-  const [contractAddress, setContractAddress] = React.useState<string>("");
+export const UserList = ({ setAlert, setRecipient }: IUserList) => {
 
-  const setUserToLocalStorage = () => {
-    if (contractAddress.length !== 42 && contractAddress.length !== 0) return;
-    localStorage.setItem("dissent-contractAddress", contractAddress);
-    setAlert(true);
-  };
+  const [symmDecoder, setSymmDecoder] = useState<Decoder>();
+  const [publicKeys, setPublicKeys] = useState<Map<string, Uint8Array>>(
+    new Map()
+  );
 
-  function createData(address: string) {
-    return { address };
-  }
+  const { account } = useMetaMask();
+  const waku = useContext(WakuContext);
+  const observerPublicKeyMessage = handlePublicKeyMessage.bind(
+    {},
+    account ?? undefined,
+    setPublicKeys
+  );
 
-  const rows = [
-    createData("Frozen yoghurt"),
-    createData("Ice cream sandwich"),
-    createData("Eclair"),
-    createData("Cupcake"),
-    createData("Gingerbread"),
-  ];
+  // init decoder fo symmetrically encrypted key exchange messages
+  useEffect(() => {
+    if (!waku) return;
+
+    const publicKeyMessageDecoder = createSymmetricDecoder(
+      PublicKeyContentTopic,
+      PublicKeyMessageEncryptionKey
+    );
+
+    setSymmDecoder(publicKeyMessageDecoder);
+  }, [waku, account])
+
+  // fetch key exchange from waku's store protocol
+  const keysExchangeStore = useStoreMessages({
+    decoder: symmDecoder,
+    node: waku,
+    options: {
+      pageDirection: PageDirection.FORWARD,
+      timeFilter: { startTime: new Date(SevenDaysAgo), endTime: new Date() },
+    }
+  })
+
+  // map pub key messages to pub key dictionary
+  useEffect(() => {
+    const keys = keysExchangeStore.messages;
+    if (keys.length <= 0) return;
+
+    keys.map(x => observerPublicKeyMessage(x as DecodedMessage))
+  }, [keysExchangeStore.messages])
+
+  const users = Array.from(publicKeys.keys());
 
   return (
     <Stack gap={2} alignItems="center">
@@ -84,22 +113,23 @@ export const UserList = ({ setAlert }: IUserList) => {
           </ListSubheader>
         }
       >
-        {rows.map((row, index) => (
-          <React.Fragment key={row.address}>
+        {users.map((user, index) => (
+          <React.Fragment key={user}>
             <ListItem
               sx={{ "&:last-child": { border: 0 } }}
               button // Add the 'button' property to make the ListItem clickable
               onClick={() => {
                 // Handle the click event here
-                console.log("ListItem clicked:", row.address);
+                console.log("Selected recipient: " + user);
+                setRecipient(user);
               }}
             >
               <ListItemAvatar>
-                <Avvvatars style="shape" value={row.address} />
+                <Avvvatars style="shape" value={user} />
               </ListItemAvatar>
-              <ListItemText primary={truncateString(row.address, 8, 6)} />
+              <ListItemText primary={truncateString(user, 8, 6)} />
             </ListItem>
-            {index < rows.length - 1 && <Divider />}
+            {index < users.length - 1 && <Divider />}
           </React.Fragment>
         ))}
       </List>
