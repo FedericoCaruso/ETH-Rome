@@ -34,7 +34,6 @@ export async function loadKeyPairFromStorage(
   const salt = hexToBytes(data.salt);
   const iv = hexToBytes(data.iv);
   const cipher = hexToBytes(data.cipher);
-
   return await decryptKey(salt, iv, cipher, password);
 }
 
