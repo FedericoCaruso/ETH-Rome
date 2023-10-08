@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { createEncoder } from "@waku/message-encryption/symmetric";
 import type { TypedDataSigner } from "@ethersproject/abstract-signer";
 import { PublicKeyMessage } from "../utils/wire";
@@ -16,7 +16,6 @@ export function useBroadcastPublicKey(
         null
     );
 
-    // const waku = useContext(WakuContext);
     const { node: waku, isLoading, error } = useWaku<LightNode>();
 
     useEffect(() => {

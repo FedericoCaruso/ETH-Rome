@@ -106,8 +106,7 @@ async function sendMessage(
   const payload = privateMessage.encode();
 
   const encoder = createEncoder({
-    contentTopic: PrivateMessageContentTopicPrefix,
-    // getDynamicPrivateMessageContentTopic(recipientAddress, address),
+    contentTopic: getDynamicPrivateMessageContentTopic(recipientAddress, address),
     publicKey: recipientPublicKey,
     ephemeral: false,
   });

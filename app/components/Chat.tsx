@@ -1,5 +1,5 @@
 import { Box, Card, CardActions, CardContent, IconButton, InputAdornment, Slide, TextField, Typography } from '@mui/material'
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMetaMask } from 'metamask-react';
 import Avvvatars from 'avvvatars-react';
 import { truncateString } from '../utils';
@@ -9,7 +9,6 @@ import { DecodedMessage } from '@waku/message-encryption';
 import { getDynamicPrivateMessageContentTopic, handlePrivateMessage } from '../utils/waku';
 import { createDecoder } from "@waku/message-encryption/ecies";
 import { useStoreMessages, useWaku } from '@waku/react';
-import { WakuContext } from '../hooks/useWakuContext';
 import { SevenDaysAgo } from '../utils/constants';
 import SendMessage from './SendMessage';
 import { Recipient } from '../utils/types';
@@ -28,7 +27,6 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
 
     const { account } = useMetaMask();
 
-    // const waku = useContext(WakuContext);
     const { node: waku, isLoading, error } = useWaku<LightNode>();
 
     const [privateMessageDecoder, setPrivateMessageDecoder] = useState<IDecoder<DecodedMessage>>();
