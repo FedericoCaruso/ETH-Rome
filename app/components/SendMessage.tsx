@@ -98,7 +98,6 @@ async function sendMessage(
   message: string,
   callback: (res: boolean) => void
 ) {
-  debugger
   const privateMessage = new PrivateMessage({
     toAddress: hexToBytes(recipientAddress),
     message: message,

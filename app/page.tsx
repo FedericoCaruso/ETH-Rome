@@ -18,7 +18,6 @@ import {
 import { useMetaMask } from "metamask-react";
 import Avvvatars from "avvvatars-react";
 import { truncateString } from "./utils";
-import { Chat, UserList } from "./components";
 import { useEffect, useState } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { ethers } from "ethers";
@@ -122,21 +121,21 @@ export default function Home() {
 
 
         {
-            status === 'initializing' || status === 'connecting' ?
-              <Skeleton variant="rectangular" width={'100%'} height={118} />
-              :
-              <>
-                {account ? (
-                  <>
-                    {step === 0 ? (
-                      <Button variant="contained" onClick={() => setStep(1)}>
-                        Start
-                      </Button>
-                    ) : step === 1 ? (
-                      <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
-                    ) : (
-                      <>
-                        {encryptionKeyPair && <ChatContainer encryptionKeyPair={encryptionKeyPair} /> }
+          status === 'initializing' || status === 'connecting' ?
+            <Skeleton variant="rectangular" width={'100%'} height={118} />
+            :
+            <>
+              {account ? (
+                <>
+                  {step === 0 ? (
+                    <Button variant="contained" onClick={() => setStep(1)}>
+                      Start
+                    </Button>
+                  ) : step === 1 ? (
+                    <PasswordForm setEncryptionKeyPair={setEncryptionKeyPair} />
+                  ) : (
+                    <>
+                      {encryptionKeyPair && <ChatContainer encryptionKeyPair={encryptionKeyPair} />}
                     </>
                   )}
                 </>

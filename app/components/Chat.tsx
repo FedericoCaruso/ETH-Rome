@@ -24,7 +24,6 @@ export interface Props {
 }
 
 export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
-
     const { account } = useMetaMask();
 
     const { node: waku } = useWaku<LightNode>();
@@ -44,28 +43,31 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
         if (!encryptionKeyPair) return;
 
         const decoder = createDecoder(dynamicContentTopic, encryptionKeyPair.privateKey);
-        debugger
         setPrivateMessageDecoder(decoder);
     }, [encryptionKeyPair, dynamicContentTopic]);
 
-    // fetch priv messages from store filtering from dynamic content topic
-    const { messages, isLoading, error } = useStoreMessages({
-        decoder: privateMessageDecoder,
-        node: waku,
-        options: {
-            pageDirection: PageDirection.FORWARD,
-            timeFilter: { startTime: new Date(SevenDaysAgo), endTime: new Date() },
-        }
-    })
-
-    if (error)
-        console.error(error)
-
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
-        if (messages.length <= 0) return;
+        (async () => {
+            if (!waku) return;
+            if (!privateMessageDecoder) return;
 
-        messages.map(privMsg => observerPrivateMessage(privMsg as DecodedMessage))
-    }, [messages])
+            setIsLoading(true)
+            try {
+                await waku.store.queryOrderedCallback(
+                    [privateMessageDecoder],
+                    (msg) => console.log("new msg!!!!", msg),
+                    // observerPrivateMessage,
+                    {
+                        pageDirection: PageDirection.FORWARD,
+                        timeFilter: { startTime: new Date(SevenDaysAgo), endTime: new Date() },
+                    }
+                );
+            } finally {
+                setIsLoading(false)
+            }
+        })();
+    }, [waku, privateMessageDecoder])
 
     return (
         <Card sx={{ minHeight: 325, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
