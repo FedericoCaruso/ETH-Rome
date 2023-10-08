@@ -11,11 +11,11 @@ import {
 import Avvvatars from "avvvatars-react";
 import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { truncateString } from "../utils";
-import { Decoder, PageDirection } from "@waku/sdk";
+import { Decoder, LightNode, PageDirection } from "@waku/sdk";
 import { DecodedMessage } from "@waku/message-encryption/ecies";
 import { createDecoder as createSymmetricDecoder } from "@waku/message-encryption/symmetric";
 import { useMetaMask } from 'metamask-react';
-import { useStoreMessages } from '@waku/react';
+import { useStoreMessages, useWaku } from '@waku/react';
 import { WakuContext } from "../hooks/useWakuContext";
 import { handlePublicKeyMessage } from "../utils/waku";
 import { PublicKeyContentTopic, SevenDaysAgo } from "../utils/constants";
@@ -35,7 +35,9 @@ export const UserList = ({ setAlert, setRecipient }: IUserList) => {
   );
 
   const { account } = useMetaMask();
-  const waku = useContext(WakuContext);
+  // const waku = useContext(WakuContext);
+  const { node: waku, isLoading, error } = useWaku<LightNode>();
+
   const observerPublicKeyMessage = handlePublicKeyMessage.bind(
     {},
     account ?? undefined,

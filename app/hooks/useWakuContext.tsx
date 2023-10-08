@@ -1,5 +1,5 @@
 // WakuContext.tsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { LightNode } from '@waku/interfaces';
 import { initWaku } from '../utils/waku';
 
@@ -16,12 +16,17 @@ export function WakuProvider({
 
     // Waku initialization
     useEffect(() => {
-        if (waku) return;
+        debugger
+        if (waku) {
+            console.log("waku already initialized")
+            return
+        };
+        console.log("waku is there: " + !!waku)
 
         const initializeWaku = async () => {
             try {
                 const _waku = await initWaku();
-                console.log('Waku ready');
+                console.log('🤯 INITIALIZED WAKU!!!');
                 setWaku(_waku);
             } catch (e) {
                 console.error('Failed to initiate Waku', e);
@@ -29,7 +34,7 @@ export function WakuProvider({
         };
 
         initializeWaku();
-    }, [waku]);
+    }, []);
 
     return (
         <WakuContext.Provider value={waku}>

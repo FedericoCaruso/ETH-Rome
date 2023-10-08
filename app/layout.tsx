@@ -3,10 +3,10 @@
 import { MetaMaskProvider } from 'metamask-react'
 import './globals.css'
 import { Inter } from 'next/font/google'
-import { useEffect, useState } from 'react'
-import { LightNode } from '@waku/interfaces'
-import { initWaku } from './utils/waku'
-import { WakuProvider } from './hooks/useWakuContext'
+import { LightNodeProvider } from '@waku/react'
+import { Protocols } from "@waku/interfaces";
+
+// import { WakuProvider } from './hooks/useWakuContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,30 +15,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [waku, setWaku] = useState<LightNode>();
-
-  // Waku initialization
-  useEffect(() => {
-    (async () => {
-      if (waku) return;
-
-      const _waku = await initWaku();
-      console.log("waku: ready");
-      setWaku(_waku);
-    })().catch((e) => {
-      console.error("Failed to initiate Waku", e);
-    });
-  }, [waku]);
-
   return (
     <html lang="en">
 
       <body className={inter.className}>
-        <WakuProvider>
+        <LightNodeProvider
+          options={{ defaultBootstrap: true }}
+          protocols={[Protocols.Filter, Protocols.LightPush, Protocols.Store]}>
           <MetaMaskProvider>
             {children}
           </MetaMaskProvider>
-        </WakuProvider>
+        </LightNodeProvider>
 
       </body>
     </html>

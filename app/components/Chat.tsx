@@ -4,11 +4,11 @@ import { useMetaMask } from 'metamask-react';
 import Avvvatars from 'avvvatars-react';
 import { truncateString } from '../utils';
 import { KeyPair } from '../utils/crypto';
-import { IDecoder, PageDirection } from '@waku/interfaces';
+import { IDecoder, LightNode, PageDirection } from '@waku/interfaces';
 import { DecodedMessage } from '@waku/message-encryption';
 import { getDynamicPrivateMessageContentTopic, handlePrivateMessage } from '../utils/waku';
 import { createDecoder } from "@waku/message-encryption/ecies";
-import { useStoreMessages } from '@waku/react';
+import { useStoreMessages, useWaku } from '@waku/react';
 import { WakuContext } from '../hooks/useWakuContext';
 import { SevenDaysAgo } from '../utils/constants';
 import SendMessage from './SendMessage';
@@ -28,7 +28,8 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
 
     const { account } = useMetaMask();
 
-    const waku = useContext(WakuContext);
+    // const waku = useContext(WakuContext);
+    const { node: waku, isLoading, error } = useWaku<LightNode>();
 
     const [privateMessageDecoder, setPrivateMessageDecoder] = useState<IDecoder<DecodedMessage>>();
     const [chatMessages, setChatMessages] = useState<Message[]>([]);

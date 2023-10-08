@@ -1,28 +1,28 @@
-import React, { ChangeEvent, KeyboardEvent, useContext, useState } from "react";
-import type { LightNode } from "@waku/interfaces";
+import React, { ChangeEvent, KeyboardEvent, useState } from "react";
+import type { LightNode } from "@waku/sdk";
 import { createEncoder } from "@waku/message-encryption/ecies";
 import { hexToBytes } from "@waku/utils/bytes";
-import { IconButton, InputAdornment, MenuItem, TextField } from "@mui/material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { getDynamicPrivateMessageContentTopic } from "@/app/utils/waku";
 import { PrivateMessage } from "@/app/utils/wire";
 import SendIcon from '@mui/icons-material/Send';
 import { useMetaMask } from "metamask-react";
-import { WakuContext } from "../hooks/useWakuContext";
 import { Recipient } from "../utils/types";
+import { useWaku } from "@waku/react";
+import { PrivateMessageContentTopicPrefix } from "../utils/constants";
 
 export interface Props {
   recipient: Recipient;
 }
 
 export default function SendMessage({ recipient }: Props) {
-  console.log("Recipient passed to SendMessage")
-  console.dir(recipient)
 
   const [message, setMessage] = useState<string>();
 
   const { account } = useMetaMask();
-  const waku = useContext(WakuContext);
-
+  const { node: waku, isLoading, error } = useWaku<LightNode>();
+  if (error)
+    alert(JSON.stringify(error))
   const handleMessageChange = (event: ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
   };
@@ -106,7 +106,8 @@ async function sendMessage(
   const payload = privateMessage.encode();
 
   const encoder = createEncoder({
-    contentTopic: getDynamicPrivateMessageContentTopic(recipientAddress, address),
+    contentTopic: PrivateMessageContentTopicPrefix,
+    // getDynamicPrivateMessageContentTopic(recipientAddress, address),
     publicKey: recipientPublicKey,
     ephemeral: false,
   });

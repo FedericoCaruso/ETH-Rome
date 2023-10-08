@@ -4,7 +4,8 @@ import type { TypedDataSigner } from "@ethersproject/abstract-signer";
 import { PublicKeyMessage } from "../utils/wire";
 import { KeyPair, PublicKeyMessageEncryptionKey, createPublicKeyMessage } from "../utils/crypto";
 import { PublicKeyContentTopic } from "../utils/constants";
-import { WakuContext } from "./useWakuContext";
+import { useWaku } from "@waku/react";
+import { LightNode } from "@waku/interfaces";
 
 export function useBroadcastPublicKey(
     encryptionKeyPair: KeyPair | undefined,
@@ -15,7 +16,8 @@ export function useBroadcastPublicKey(
         null
     );
 
-    const waku = useContext(WakuContext);
+    // const waku = useContext(WakuContext);
+    const { node: waku, isLoading, error } = useWaku<LightNode>();
 
     useEffect(() => {
         const broadcastPublicKey = async () => {
@@ -43,8 +45,8 @@ export function useBroadcastPublicKey(
             });
 
             console.log("sending pub key");
-            await waku.lightPush.send(publicKeyMessageEncoder, { payload });
-            console.log("sent pub key");
+            const res = await waku.lightPush.send(publicKeyMessageEncoder, { payload });
+            console.log("sent pub key", res);
         };
 
         broadcastPublicKey();
