@@ -74,8 +74,8 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
 
     return (
 		<div>
-        <Card sx={{ minHeight: 325, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Card sx={{ minHeight: 400, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <CardContent sx={{ minHeight: 400, display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {
                     isLoading ?
                         <>
