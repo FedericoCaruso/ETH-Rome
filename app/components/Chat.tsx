@@ -1,4 +1,4 @@
-import { Box, Card, CardActions, CardContent, IconButton, InputAdornment, Slide, TextField, Typography } from '@mui/material'
+import { Box, Card, CardActions, CardContent, CircularProgress, IconButton, InputAdornment, Skeleton, Slide, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { useMetaMask } from 'metamask-react';
 import Avvvatars from 'avvvatars-react';
@@ -27,7 +27,7 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
 
     const { account } = useMetaMask();
 
-    const { node: waku, isLoading, error } = useWaku<LightNode>();
+    const { node: waku } = useWaku<LightNode>();
 
     const [privateMessageDecoder, setPrivateMessageDecoder] = useState<IDecoder<DecodedMessage>>();
     const [chatMessages, setChatMessages] = useState<Message[]>([]);
@@ -43,13 +43,13 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
     useEffect(() => {
         if (!encryptionKeyPair) return;
 
-        setPrivateMessageDecoder(
-            createDecoder(dynamicContentTopic, encryptionKeyPair.privateKey)
-        );
+        const decoder = createDecoder(dynamicContentTopic, encryptionKeyPair.privateKey);
+        debugger
+        setPrivateMessageDecoder(decoder);
     }, [encryptionKeyPair, dynamicContentTopic]);
 
     // fetch priv messages from store filtering from dynamic content topic
-    const { messages } = useStoreMessages({
+    const { messages, isLoading, error } = useStoreMessages({
         decoder: privateMessageDecoder,
         node: waku,
         options: {
@@ -57,6 +57,9 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
             timeFilter: { startTime: new Date(SevenDaysAgo), endTime: new Date() },
         }
     })
+
+    if (error)
+        console.error(error)
 
     useEffect(() => {
         if (messages.length <= 0) return;
@@ -68,22 +71,34 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
         <Card sx={{ minHeight: 325, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {
-                    chatMessages.map(item => (
-                        <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-                            <Box sx={{ color: 'lightblue', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: 2 }}>
-                                <Avvvatars style="shape" value={account ?? ''} />
-                                <Typography fontSize={12}>
-                                    {truncateString(account ?? '', 4, 4)}
-                                </Typography>
-                                {item.text}
-                            </Box>
-                        </Slide>
-                    ))
+                    isLoading ?
+                        <>
+                            <Skeleton animation="wave" />
+                            <Skeleton animation="wave" />
+                            <Skeleton animation="wave" />
+                            <Skeleton animation="wave" />
+                            <Skeleton animation="wave" />
+                        </> :
+                        chatMessages.map(item => (
+                            <Slide direction="up" in={true} mountOnEnter unmountOnExit>
+                                <Box sx={{ color: 'lightblue', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <Avvvatars style="shape" value={account ?? ''} />
+                                    <Typography fontSize={12}>
+                                        {truncateString(account ?? '', 4, 4)}
+                                    </Typography>
+                                    {item.text}
+                                </Box>
+                            </Slide>
+                        ))
                 }
             </CardContent>
             <CardActions>
-                <SendMessage
-                    recipient={recipient} />
+                {
+                    isLoading ?
+                        <Skeleton animation="wave" /> :
+                        <SendMessage
+                            recipient={recipient} />
+                }
             </CardActions>
         </Card>
     )

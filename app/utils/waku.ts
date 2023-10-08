@@ -72,6 +72,18 @@ export async function handlePrivateMessage(
 }
 
 export const getDynamicPrivateMessageContentTopic = (addr1: string, addr2: string) => {
-    const suffix = [addr1, addr2].sort((a, b) => a.localeCompare(b)).join('/');
+    const suffix = [trim0x(addr1), trim0x(addr2)].sort((a, b) => a.localeCompare(b)).join('/');
     return `${PrivateMessageContentTopicPrefix}/${SimpleHash(suffix)}`
+}
+
+const trim0x = (addr: string) => {
+    if (addr.startsWith('0x')) {
+        return addr.slice(2);
+    }
+
+    if (addr.startsWith('0X')) {
+        return addr.slice(2);
+    }
+
+    return addr;
 }
