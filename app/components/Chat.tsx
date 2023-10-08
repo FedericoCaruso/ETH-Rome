@@ -1,5 +1,8 @@
-import { Box, Card, CardActions, CardContent, CircularProgress, IconButton, InputAdornment, Skeleton, Slide, TextField, Typography } from '@mui/material'
-import { useEffect, useState } from 'react';
+
+import { Box, Card, CardActions, CardContent, Container, IconButton, InputAdornment, Skeleton, Slide, TextField, Typography } from '@mui/material'
+import { useContext, useEffect, useState } from 'react';
+
+
 import { useMetaMask } from 'metamask-react';
 import Avvvatars from 'avvvatars-react';
 import { truncateString } from '../utils';
@@ -12,6 +15,8 @@ import { useStoreMessages, useWaku } from '@waku/react';
 import { SevenDaysAgo } from '../utils/constants';
 import SendMessage from './SendMessage';
 import { Recipient } from '../utils/types';
+import Peanut from './Peanut';
+import FloatingActionButtonZoom from './FloatingActionButtonZoom';
 
 export interface Message {
     text: string;
@@ -68,6 +73,7 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
     }, [messages])
 
     return (
+		<div>
         <Card sx={{ minHeight: 325, padding: 2, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 {
@@ -79,6 +85,7 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
                             <Skeleton animation="wave" />
                             <Skeleton animation="wave" />
                         </> :
+
                         chatMessages.map(item => (
                             <Slide direction="up" in={true} mountOnEnter unmountOnExit>
                                 <Box sx={{ color: 'lightblue', borderRadius: '15px', display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -100,6 +107,10 @@ export const Chat = ({ recipient, encryptionKeyPair }: Props) => {
                             recipient={recipient} />
                 }
             </CardActions>
+ 			<Container maxWidth="sm">
+                <FloatingActionButtonZoom />
+            </Container>
         </Card>
+        </div>
     )
 }
