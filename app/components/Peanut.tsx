@@ -78,7 +78,7 @@ export default function Peanut() {
   return (
 
 <div>
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 450 }}>
     <CardMedia
       sx={{ height: 140 }}
       image="/images/peanut.png"
